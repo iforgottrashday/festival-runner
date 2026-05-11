@@ -1,6 +1,21 @@
 import { useEffect } from 'react'
 import { gameStore } from './store'
 
+function nowSec() {
+  return performance.now() / 1000
+}
+
+function pressLeft() {
+  // In the turn window, left = turn left. Otherwise, left = lane switch.
+  if (!gameStore.tryTurn('left', nowSec())) gameStore.moveLeft()
+}
+function pressRight() {
+  if (!gameStore.tryTurn('right', nowSec())) gameStore.moveRight()
+}
+function pressJump() {
+  gameStore.jump(nowSec())
+}
+
 export function useControls() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -8,17 +23,17 @@ export function useControls() {
       switch (e.code) {
         case 'ArrowLeft':
         case 'KeyA':
-          gameStore.moveLeft()
+          pressLeft()
           break
         case 'ArrowRight':
         case 'KeyD':
-          gameStore.moveRight()
+          pressRight()
           break
         case 'Space':
         case 'ArrowUp':
         case 'KeyW':
           e.preventDefault()
-          gameStore.jump(performance.now() / 1000)
+          pressJump()
           break
       }
     }
@@ -44,10 +59,10 @@ export function useControls() {
       const absY = Math.abs(dy)
       if (Math.max(absX, absY) < 30) return
       if (absX > absY) {
-        if (dx > 0) gameStore.moveRight()
-        else gameStore.moveLeft()
+        if (dx > 0) pressRight()
+        else pressLeft()
       } else if (dy < 0) {
-        gameStore.jump(performance.now() / 1000)
+        pressJump()
       }
     }
     window.addEventListener('touchstart', onTouchStart, { passive: true })

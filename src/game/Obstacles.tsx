@@ -1,12 +1,15 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import type { Group } from 'three'
-import { gameStore, LANE_WIDTH, useGameStatus, type Lane } from './store'
+import { gameStore, LANE_WIDTH, type Lane } from './store'
 
 const POOL_SIZE = 16
-const SPAWN_Z = -80
+const SPAWN_Z = -60
 const KILL_Z = 8
 const MIN_GAP = 14
+// Don't spawn within this many units of the end-of-segment wall, so the
+// player has clear lanes to focus on the turn cue.
+const TURN_CLEARANCE = 22
 
 type ObstacleType = 'block' | 'jumpable'
 
@@ -37,23 +40,28 @@ export function Obstacles({
       })),
     [],
   )
-  const status = useGameStatus()
-
-  // Clear pool whenever a new run begins so stale obstacles from a previous
-  // game don't instantly collide with the respawned player.
-  useEffect(() => {
-    if (status === 'playing') {
-      for (const o of pool) {
-        o.active = false
-        o.z = 0
-        o.scored = false
-      }
-    }
-  }, [status, pool])
+  // Track the last (status, turnsCompleted) tuple. When either changes,
+  // we clear the pool synchronously inside useFrame — this avoids the
+  // race where a useEffect-driven reset runs *after* the first frame's
+  // collision check, leaving stale obstacles to instantly kill the player.
+  const lastResetKey = useRef('')
 
   useFrame((_state, deltaSec) => {
     const s = gameStore.raw
-    if (s.status !== 'playing') return
+
+    const resetKey = `${s.status}:${s.turnsCompleted}`
+    if (resetKey !== lastResetKey.current) {
+      lastResetKey.current = resetKey
+      if (s.status === 'playing') {
+        for (const o of pool) {
+          o.active = false
+          o.z = 0
+          o.scored = false
+        }
+      }
+    }
+
+    if (s.status !== 'playing' || s.isTurning || s.paused) return
 
     const meshes = groupRef.current.children
     let furthest = 0
@@ -69,15 +77,12 @@ export function Obstacles({
       o.z += s.speed * dt
       mesh.position.x = o.lane * LANE_WIDTH
       mesh.position.z = o.z
-      // Encode type via scale.y: jumpable = short box, block = tall
       mesh.scale.y = o.type === 'jumpable' ? 0.5 : 1.4
       mesh.position.y = mesh.scale.y / 2
-      // Color via material — set in render, but tweak via emissive intensity if needed
       mesh.visible = true
 
       if (o.z < furthest) furthest = o.z
 
-      // collision at player z ~= 0
       if (o.z > -0.7 && o.z < 0.7) {
         const playerX = s.laneX
         const obsX = o.lane * LANE_WIDTH
@@ -89,7 +94,6 @@ export function Obstacles({
         }
       }
 
-      // score when passed
       if (!o.scored && o.z > 1.5) {
         o.scored = true
         onScore(10)
@@ -100,7 +104,13 @@ export function Obstacles({
       }
     }
 
-    if (furthest > SPAWN_Z + MIN_GAP) {
+    // Don't spawn obstacles in the lead-up to the wall — the player needs
+    // a clean lane to spot the turn arrow and react.
+    const seg = s.segments[0]
+    const distToWall = seg ? seg.length - s.distAlong : Infinity
+    const spawnAllowed = distToWall > TURN_CLEARANCE
+
+    if (spawnAllowed && furthest > SPAWN_Z + MIN_GAP) {
       const free = pool.find((o) => !o.active)
       if (free) {
         free.active = true

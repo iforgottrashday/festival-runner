@@ -24,15 +24,40 @@ export function Scene({ audio }: { audio: Audio }) {
 
   useFrame((_state, dt) => {
     const s = gameStore.raw
-    if (s.status !== 'playing') return
-    // distance-based passive score
+    if (s.status !== 'playing' || s.paused) return
+
+    // Trip-flash transition: hold world still until the flash completes,
+    // then snap to the next segment.
+    if (s.isTurning) {
+      const now = performance.now() / 1000
+      if (now >= s.turnFlashEnd) gameStore.completeTurn()
+      return
+    }
+
+    // Advance path progress
+    const seg = s.segments[0]
+    if (seg) {
+      s.distAlong += s.speed * dt
+
+      // Hit the wall without turning → game over.
+      if (s.distAlong >= seg.length) {
+        audio.playGameOver()
+        audio.setIntensity(0)
+        gameStore.gameOver()
+        return
+      }
+    }
+
+    // Distance score (passive)
+    s.distance += s.speed * dt
     scoreAccum.current += s.speed * dt * 0.5
     if (scoreAccum.current >= 1) {
       const add = Math.floor(scoreAccum.current)
       scoreAccum.current -= add
       s.score += add
     }
-    // intensity ramp
+
+    // Intensity ramp from score
     const intensity: Intensity =
       s.score > 1500 ? 2 : s.score > 500 ? 1 : 0
     if (intensity !== lastIntensity.current) {

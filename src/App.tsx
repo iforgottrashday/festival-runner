@@ -1,14 +1,27 @@
+import { useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Scene } from './game/Scene'
 import { HUD } from './ui/HUD'
+import { TripFlash } from './ui/TripFlash'
 import { useControls } from './game/useControls'
 import { useHouseBeat } from './audio/useHouseBeat'
-import { gameStore } from './game/store'
+import { gameStore, useIsTurning } from './game/store'
 import './App.css'
+
+// Expose for dev/debugging — accessible at window.gs in the browser console.
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
+  ;(window as unknown as { gs: typeof gameStore }).gs = gameStore
+}
 
 function App() {
   useControls()
   const audio = useHouseBeat()
+  const isTurning = useIsTurning()
+
+  // Filter the music during the trip-flash for a satisfying audio cue.
+  useEffect(() => {
+    audio.setTripMode(isTurning)
+  }, [audio, isTurning])
 
   const handleStart = async () => {
     await audio.start()
@@ -26,6 +39,7 @@ function App() {
       >
         <Scene audio={audio} />
       </Canvas>
+      <TripFlash />
       <HUD onStart={handleStart} />
     </>
   )

@@ -1,10 +1,16 @@
 import { useSyncExternalStore } from 'react'
+import {
+  makeInitialPath,
+  makeSegment,
+  TURN_WINDOW_DIST,
+  type Segment,
+  type TurnDir,
+} from './path'
 
 export type GameStatus = 'idle' | 'playing' | 'gameover'
 export type Lane = -1 | 0 | 1
 
 export const LANE_WIDTH = 2.2
-export const SERVICE_LANES: Lane[] = [-1, 0, 1]
 
 interface GameState {
   status: GameStatus
@@ -20,6 +26,15 @@ interface GameState {
   distance: number
   tripMode: boolean
   tripEnd: number
+  // path state
+  segments: Segment[]
+  distAlong: number
+  isTurning: boolean
+  turnFlashEnd: number // performance.now()/1000 timestamp
+  turnsCompleted: number
+  // Dev/test only — freezes all game motion when true. Set via window.gs in
+  // the browser console for inspection.
+  paused: boolean
 }
 
 const state: GameState = {
@@ -35,6 +50,12 @@ const state: GameState = {
   distance: 0,
   tripMode: false,
   tripEnd: 0,
+  segments: makeInitialPath(),
+  distAlong: 0,
+  isTurning: false,
+  turnFlashEnd: 0,
+  turnsCompleted: 0,
+  paused: false,
 }
 
 const listeners = new Set<() => void>()
@@ -61,6 +82,11 @@ export const gameStore = {
     state.speed = 12
     state.distance = 0
     state.tripMode = false
+    state.segments = makeInitialPath()
+    state.distAlong = 0
+    state.isTurning = false
+    state.turnFlashEnd = 0
+    state.turnsCompleted = 0
     notify()
   },
 
@@ -80,7 +106,7 @@ export const gameStore = {
   },
 
   moveLeft() {
-    if (state.status !== 'playing') return
+    if (state.status !== 'playing' || state.isTurning) return
     if (state.lane > -1) {
       state.lane = (state.lane - 1) as Lane
       notify()
@@ -88,7 +114,7 @@ export const gameStore = {
   },
 
   moveRight() {
-    if (state.status !== 'playing') return
+    if (state.status !== 'playing' || state.isTurning) return
     if (state.lane < 1) {
       state.lane = (state.lane + 1) as Lane
       notify()
@@ -96,15 +122,44 @@ export const gameStore = {
   },
 
   jump(now: number) {
-    if (state.status !== 'playing' || state.isJumping) return
+    if (state.status !== 'playing' || state.isJumping || state.isTurning) return
     state.isJumping = true
     state.jumpStart = now
     notify()
   },
 
+  /** Returns true if the input was consumed as a turn. */
+  tryTurn(dir: TurnDir, now: number): boolean {
+    if (state.status !== 'playing' || state.isTurning) return false
+    const seg = state.segments[0]
+    if (!seg) return false
+    const distRemaining = seg.length - state.distAlong
+    if (distRemaining > TURN_WINDOW_DIST) return false
+    if (seg.turnDir !== dir) return false
+    // Successful turn: begin trip-flash transition.
+    state.isTurning = true
+    state.turnFlashEnd = now + 0.28 // TURN_FLASH_DURATION
+    notify()
+    return true
+  },
+
+  /** Called after the trip-flash completes — snap to the next segment. */
+  completeTurn() {
+    if (!state.isTurning) return
+    state.segments.shift()
+    state.segments.push(makeSegment(state.segments[state.segments.length - 1]))
+    state.distAlong = 0
+    state.isTurning = false
+    state.lane = 0
+    state.laneX = 0
+    state.turnsCompleted += 1
+    state.score += 50 // bonus for nailing the turn
+    notify()
+  },
+
   triggerTrip(now: number) {
     state.tripMode = true
-    state.tripEnd = now + 4 // seconds
+    state.tripEnd = now + 4
     notify()
   },
 
@@ -142,5 +197,12 @@ export function useTripMode() {
     gameStore.subscribe,
     () => state.tripMode,
     () => state.tripMode,
+  )
+}
+export function useIsTurning() {
+  return useSyncExternalStore(
+    gameStore.subscribe,
+    () => state.isTurning,
+    () => state.isTurning,
   )
 }
