@@ -37,6 +37,18 @@ namespace FestivalRunner
         [SerializeField] private Color wallColor = new Color(1f, 0f, 0.67f);
         [SerializeField] private Color chevronColor = new Color(1f, 0.83f, 0f);
 
+        [Header("Placeholder visibility")]
+        [Tooltip("Show the pink wall slab + neon trim at the end of each segment. Off by default — we use the chevron + rotation as the turn cue and let festival decor fill the corner instead.")]
+        [SerializeField] private bool showWallSlab = false;
+        [Tooltip("Show the pink/cyan side rails along the corridor. Off by default — crowd lines the sides instead.")]
+        [SerializeField] private bool showSideRails = false;
+        [Tooltip("Show the cyan lane dividers running along the floor.")]
+        [SerializeField] private bool showLaneStripes = false;
+        [Tooltip("Show the perpendicular branch preview at the corner before turning.")]
+        [SerializeField] private bool showSpurPreview = false;
+        [Tooltip("Show the yellow chevron above each corner indicating turn direction.")]
+        [SerializeField] private bool showChevron = true;
+
         private Transform[] _tiles;
         private Transform _wallGroup;
         private Transform _chevronGroup;
@@ -119,6 +131,60 @@ namespace FestivalRunner
             }
             SpawnStripesAndRails(_spurGroup, matStripe, matRailLeft, matRailRight,
                                  _spurStripes, _spurRails);
+
+            ApplyPlaceholderVisibility();
+        }
+
+        /// <summary>
+        /// Toggles the visibility of the placeholder corridor visuals based on
+        /// the inspector flags. Off by default while we transition to real
+        /// festival decor — the chevron stays as the turn cue.
+        /// </summary>
+        void ApplyPlaceholderVisibility()
+        {
+            // Wall slab + top trim: anything inside _wallGroup that's NOT the chevron.
+            if (_wallGroup != null)
+            {
+                foreach (Transform child in _wallGroup)
+                {
+                    if (child == _chevronGroup) continue;
+                    var r = child.GetComponent<Renderer>();
+                    if (r != null) r.enabled = showWallSlab;
+                }
+            }
+            // Chevron itself.
+            if (_chevronGroup != null) _chevronGroup.gameObject.SetActive(showChevron);
+
+            // Side rails.
+            foreach (var t in _currentRails)
+            {
+                if (t == null) continue;
+                var r = t.GetComponent<Renderer>();
+                if (r != null) r.enabled = showSideRails;
+            }
+            // Lane stripes.
+            foreach (var t in _currentStripes)
+            {
+                if (t == null) continue;
+                var r = t.GetComponent<Renderer>();
+                if (r != null) r.enabled = showLaneStripes;
+            }
+            // Same flags propagate to the spur preview's matching parts.
+            foreach (var t in _spurRails)
+            {
+                if (t == null) continue;
+                var r = t.GetComponent<Renderer>();
+                if (r != null) r.enabled = showSideRails && showSpurPreview;
+            }
+            foreach (var t in _spurStripes)
+            {
+                if (t == null) continue;
+                var r = t.GetComponent<Renderer>();
+                if (r != null) r.enabled = showLaneStripes && showSpurPreview;
+            }
+            // The spur GameObject itself respects its own flag (its tiles toggle
+            // when active, see the existing Update code).
+            if (_spurGroup != null && !showSpurPreview) _spurGroup.gameObject.SetActive(false);
         }
 
         void Update()
@@ -201,7 +267,7 @@ namespace FestivalRunner
                     // turn direction in world space. Right turn → world -X.
                     _spurGroup.localRotation = Quaternion.Euler(0f,
                         seg.TurnDir == TurnDir.Right ? 90f : -90f, 0f);
-                    _spurGroup.gameObject.SetActive(cornerZ < 4f);
+                    _spurGroup.gameObject.SetActive(showSpurPreview && cornerZ < 4f);
                 }
             }
         }
