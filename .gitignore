@@ -9,6 +9,9 @@
 [Mm]emoryCaptures/
 [Aa]ssets/AssetStoreTools*
 [Aa]ssets/Plugins/Editor/JetBrains*
+# Unity crash auto-recovery scenes
+[Aa]ssets/_Recovery/
+[Aa]ssets/_Recovery.meta
 
 # Visual Studio / VS Code / Rider artifacts
 .vs/
