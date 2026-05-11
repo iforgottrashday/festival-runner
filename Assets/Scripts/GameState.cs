@@ -35,12 +35,24 @@ namespace FestivalRunner
         public bool IsJumping;
         public float JumpStartTime;
 
+        // ---- Turn / path state ----
+
+        /// <summary>True while the trip-flash + world rotation animation is playing.</summary>
         public bool IsTurning;
+
+        /// <summary>DistAlong value at the moment a turn was triggered. Used to drive
+        /// the rotation animation by progress (not by time).</summary>
+        public float TurnStartDistAlong;
+
+        /// <summary>Current world rotation around Y, in degrees. Animates 0 → ±90° during
+        /// a turn, snaps back to 0 when CompleteTurn fires. Read by WorldRoot.</summary>
+        public float WorldRotation;
+
         public int TurnsCompleted;
 
         /// <summary>
-        /// Fires on discrete state changes (start, end, lane change, etc.).
-        /// Per-frame mutations (DistAlong, Speed) do NOT fire this.
+        /// Fires on discrete state changes (start, end, lane change, turn trigger, etc.).
+        /// Per-frame mutations (DistAlong, Speed, WorldRotation) do NOT fire this.
         /// </summary>
         public event Action OnStateChanged;
 
@@ -69,6 +81,8 @@ namespace FestivalRunner
             Speed = 12f;
             IsJumping = false;
             IsTurning = false;
+            TurnStartDistAlong = 0f;
+            WorldRotation = 0f;
             TurnsCompleted = 0;
             OnStateChanged?.Invoke();
         }

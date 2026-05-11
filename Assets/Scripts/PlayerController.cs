@@ -61,7 +61,9 @@ namespace FestivalRunner
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
             {
-                if (s.Lane > -1)
+                // Try a turn first; if not in the turn window or wrong direction,
+                // fall through to a lane switch.
+                if (!GameLoop.TryTriggerTurn(TurnDir.Left) && s.Lane > -1)
                 {
                     s.Lane -= 1;
                     s.NotifyStateChanged();
@@ -69,7 +71,7 @@ namespace FestivalRunner
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
-                if (s.Lane < 1)
+                if (!GameLoop.TryTriggerTurn(TurnDir.Right) && s.Lane < 1)
                 {
                     s.Lane += 1;
                     s.NotifyStateChanged();
