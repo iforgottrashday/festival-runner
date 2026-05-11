@@ -3,8 +3,10 @@ using UnityEngine;
 namespace FestivalRunner
 {
     /// <summary>
-    /// Player capsule controller. Handles lane switching and jumping.
-    /// Reads/writes <see cref="GameState"/> for lane + jump state.
+    /// Player capsule/character controller. Handles lane switching and
+    /// jumping. Reads/writes <see cref="GameState"/> for lane + jump state.
+    /// Drives an Animator if one is attached / assigned (sets the "Running"
+    /// bool, fires "Jump" and "Trip" triggers).
     /// </summary>
     public class PlayerController : MonoBehaviour
     {
@@ -17,13 +19,23 @@ namespace FestivalRunner
 
         [Header("Jump")]
         [SerializeField] private float jumpDuration = 0.6f;
-        [SerializeField] private float jumpHeight = 1.8f;
+        [SerializeField] private float jumpHeight = 1.2f;
 
         [Header("Base position")]
-        [Tooltip("Y of the capsule center while running. Default 1.0 places a 2-unit-tall capsule with its bottom at Y=0 (ground level).")]
-        [SerializeField] private float baseY = 1.0f;
+        [Tooltip("Y of the player's pivot while running. 0 for a character whose pivot is at the feet (Mixamo). 1 for a 2-unit-tall capsule centered.")]
+        [SerializeField] private float baseY = 0f;
+
+        [Header("Animation")]
+        [Tooltip("Optional. If assigned, the controller drives the Running bool + Jump/Trip triggers from game state.")]
+        [SerializeField] private Animator animator;
 
         private float _currentX;
+        private GameStatus _lastSeenStatus = GameStatus.Idle;
+
+        void Awake()
+        {
+            if (animator == null) animator = GetComponentInChildren<Animator>();
+        }
 
         void Update()
         {
@@ -53,8 +65,20 @@ namespace FestivalRunner
             }
 
             transform.localPosition = new Vector3(_currentX, baseY + jumpY, 0f);
-            // Subtle lean into the lane shift.
-            transform.localRotation = Quaternion.Euler(0f, 0f, -_currentX * 4f);
+
+            // Drive the animator from game state.
+            if (animator != null)
+            {
+                bool running = s.Status == GameStatus.Playing && !s.IsJumping;
+                animator.SetBool("Running", running);
+
+                // Fire the Trip trigger when status transitions to GameOver.
+                if (s.Status == GameStatus.GameOver && _lastSeenStatus != GameStatus.GameOver)
+                {
+                    animator.SetTrigger("Trip");
+                }
+            }
+            _lastSeenStatus = s.Status;
         }
 
         void HandleInput(GameState s)
@@ -86,6 +110,7 @@ namespace FestivalRunner
                 s.IsJumping = true;
                 s.JumpStartTime = Time.time;
                 s.NotifyStateChanged();
+                if (animator != null) animator.SetTrigger("Jump");
             }
         }
     }
