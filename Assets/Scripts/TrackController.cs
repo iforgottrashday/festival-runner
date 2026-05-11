@@ -13,7 +13,6 @@ namespace FestivalRunner
         [Header("Tile layout")]
         [SerializeField] private int tileCount = 14;
         [SerializeField] private float tileLength = 8f;
-        [SerializeField] private float laneStripeX = 1.1f;
 
         [Header("Wrap")]
         [Tooltip("Z position at which a tile teleports back to the rear.")]

@@ -20,8 +20,8 @@ namespace FestivalRunner
         [SerializeField] private float jumpHeight = 1.8f;
 
         [Header("Base position")]
-        [Tooltip("Y offset from the ground (half the capsule height).")]
-        [SerializeField] private float baseY = 0.5f;
+        [Tooltip("Y of the capsule center while running. Default 1.0 places a 2-unit-tall capsule with its bottom at Y=0 (ground level).")]
+        [SerializeField] private float baseY = 1.0f;
 
         private float _currentX;
 

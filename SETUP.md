@@ -45,7 +45,7 @@ Leave its Transform at `(0, 0, 0)`. This is a logic-only GameObject — it doesn
 In Hierarchy, right-click → **3D Object → Capsule**. Rename to **Player**.
 
 Set its Transform in the Inspector:
-- Position: `0, 0.5, 0`
+- Position: `0, 1, 0`
 - Scale: `0.8, 1, 0.8`
 
 Add Component → `PlayerController`.
