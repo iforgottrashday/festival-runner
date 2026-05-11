@@ -18,7 +18,7 @@
 
 .trip-flash.on {
   opacity: 1;
-  animation: trip-flash-anim 0.28s ease-out;
+  animation: trip-flash-anim 0.4s ease-out;
 }
 
 @keyframes trip-flash-anim {

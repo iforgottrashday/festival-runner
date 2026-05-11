@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
+import type { Group } from 'three'
 import { Player } from './Player'
 import { Track } from './Track'
 import { Obstacles } from './Obstacles'
 import { gameStore } from './store'
+import { TURN_FLASH_DURATION } from './path'
 import type { Intensity } from '../audio/HouseBeat'
 
 type Audio = {
@@ -12,9 +14,15 @@ type Audio = {
   playGameOver: () => void
 }
 
+// Ease-in-out cubic — softer start/end than linear, sharper middle.
+function easeInOutCubic(t: number) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+}
+
 export function Scene({ audio }: { audio: Audio }) {
   const scoreAccum = useRef(0)
   const lastIntensity = useRef<Intensity>(0)
+  const worldRef = useRef<Group>(null!)
   const { camera } = useThree()
 
   useEffect(() => {
@@ -24,22 +32,38 @@ export function Scene({ audio }: { audio: Audio }) {
 
   useFrame((_state, dt) => {
     const s = gameStore.raw
-    if (s.status !== 'playing' || s.paused) return
+    if (s.status !== 'playing') {
+      if (worldRef.current) worldRef.current.rotation.y = 0
+      return
+    }
+    // Paused freezes motion but leaves current rotation intact so dev
+    // inspection can capture mid-turn snapshots.
+    if (s.paused) return
 
-    // Trip-flash transition: hold world still until the flash completes,
-    // then snap to the next segment.
+    // Trip-flash + world rotation during a turn. The world rotates
+    // ±90° while the flash overlay covers the snap-back at the end.
     if (s.isTurning) {
       const now = performance.now() / 1000
+      const elapsed = TURN_FLASH_DURATION - (s.turnFlashEnd - now)
+      const t = Math.max(0, Math.min(1, elapsed / TURN_FLASH_DURATION))
+      const turnDir = s.segments[0]?.turnDir
+      // Right turn: camera/world rotates so player perceives going right;
+      // we negate Y to match three.js right-handed convention.
+      const target =
+        turnDir === 'left' ? Math.PI / 2 : -Math.PI / 2
+      s.worldRotation = target * easeInOutCubic(t)
+      if (worldRef.current) worldRef.current.rotation.y = s.worldRotation
       if (now >= s.turnFlashEnd) gameStore.completeTurn()
       return
     }
+
+    // Normal frame — make sure rotation is exactly 0
+    if (worldRef.current) worldRef.current.rotation.y = 0
 
     // Advance path progress
     const seg = s.segments[0]
     if (seg) {
       s.distAlong += s.speed * dt
-
-      // Hit the wall without turning → game over.
       if (s.distAlong >= seg.length) {
         audio.playGameOver()
         audio.setIntensity(0)
@@ -86,9 +110,14 @@ export function Scene({ audio }: { audio: Audio }) {
       <pointLight position={[-4, 3, -10]} color="#00ffff" intensity={2.5} distance={15} />
       <pointLight position={[4, 3, -20]} color="#ffd400" intensity={2.5} distance={15} />
 
-      <Track />
-      <Player />
-      <Obstacles onCollide={handleCollide} onScore={handleScore} />
+      {/* World group — rotates ±90° during a turn so the player visually
+          experiences a corner. The Player itself sits at the origin so it
+          spins in place rather than around any other point. */}
+      <group ref={worldRef}>
+        <Track />
+        <Player />
+        <Obstacles onCollide={handleCollide} onScore={handleScore} />
+      </group>
     </>
   )
 }

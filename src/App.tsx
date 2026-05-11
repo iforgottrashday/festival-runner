@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber'
 import { Scene } from './game/Scene'
 import { HUD } from './ui/HUD'
 import { TripFlash } from './ui/TripFlash'
+import { TurnPrompt } from './ui/TurnPrompt'
 import { useControls } from './game/useControls'
 import { useHouseBeat } from './audio/useHouseBeat'
 import { gameStore, useIsTurning } from './game/store'
@@ -39,6 +40,7 @@ function App() {
       >
         <Scene audio={audio} />
       </Canvas>
+      <TurnPrompt />
       <TripFlash />
       <HUD onStart={handleStart} />
     </>

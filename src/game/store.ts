@@ -2,6 +2,7 @@ import { useSyncExternalStore } from 'react'
 import {
   makeInitialPath,
   makeSegment,
+  TURN_FLASH_DURATION,
   TURN_WINDOW_DIST,
   type Segment,
   type TurnDir,
@@ -32,6 +33,9 @@ interface GameState {
   isTurning: boolean
   turnFlashEnd: number // performance.now()/1000 timestamp
   turnsCompleted: number
+  // Camera/world rotation around Y axis. Animates ±π/2 during a turn,
+  // snaps back to 0 when the new segment loads.
+  worldRotation: number
   // Dev/test only — freezes all game motion when true. Set via window.gs in
   // the browser console for inspection.
   paused: boolean
@@ -55,6 +59,7 @@ const state: GameState = {
   isTurning: false,
   turnFlashEnd: 0,
   turnsCompleted: 0,
+  worldRotation: 0,
   paused: false,
 }
 
@@ -87,6 +92,7 @@ export const gameStore = {
     state.isTurning = false
     state.turnFlashEnd = 0
     state.turnsCompleted = 0
+    state.worldRotation = 0
     notify()
   },
 
@@ -136,9 +142,9 @@ export const gameStore = {
     const distRemaining = seg.length - state.distAlong
     if (distRemaining > TURN_WINDOW_DIST) return false
     if (seg.turnDir !== dir) return false
-    // Successful turn: begin trip-flash transition.
+    // Successful turn: begin trip-flash + rotation transition.
     state.isTurning = true
-    state.turnFlashEnd = now + 0.28 // TURN_FLASH_DURATION
+    state.turnFlashEnd = now + TURN_FLASH_DURATION
     notify()
     return true
   },
@@ -152,6 +158,7 @@ export const gameStore = {
     state.isTurning = false
     state.lane = 0
     state.laneX = 0
+    state.worldRotation = 0
     state.turnsCompleted += 1
     state.score += 50 // bonus for nailing the turn
     notify()

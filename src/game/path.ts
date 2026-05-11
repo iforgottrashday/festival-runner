@@ -42,5 +42,6 @@ export function makeInitialPath(count = 4): Segment[] {
 // press the matching direction key (or swipe) during this band.
 export const TURN_WINDOW_DIST = 14
 
-// Duration of the "trip" flash effect during a successful turn (seconds).
-export const TURN_FLASH_DURATION = 0.28
+// Duration of the trip-flash + world rotation animation during a turn (seconds).
+// Longer feels more like an actual rotation but adds input lock-out.
+export const TURN_FLASH_DURATION = 0.4
