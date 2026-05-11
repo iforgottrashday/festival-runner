@@ -441,6 +441,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1697335800}
+  - {fileID: 1634532650}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
@@ -682,6 +683,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1634532649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1634532650}
+  - component: {fileID: 1634532651}
+  m_Layer: 0
+  m_Name: Crowd
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1634532650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634532649}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 486055416}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1634532651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634532649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249407f177dd5064b82cfceb576fe867, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FestivalRunner.CrowdSpawner
+  crowdPrefabs:
+  - {fileID: 6958778057038704009, guid: 87a72f96ce5cbd44e841604a23793e74, type: 3}
+  - {fileID: 6851078570608253827, guid: e836a410b0250f848ac3b5aa377828c5, type: 3}
+  - {fileID: 6340499851488065547, guid: d3bbbfb88e0829b4f91b2892977f7c1a, type: 3}
+  - {fileID: 2099554372184016317, guid: 432bfcd15b94b47418155c845836742e, type: 3}
+  - {fileID: 2513404226414326617, guid: a1f2d1bbfd3fbe443bbafc7409efde0a, type: 3}
+  - {fileID: 6860439443836173746, guid: c5d3b86645a66884caefa00a7e15f7b4, type: 3}
+  - {fileID: 8173867755292196880, guid: 6ee89945f7bc0024f8dd7c9b4074bd68, type: 3}
+  - {fileID: 5566987835239272960, guid: a19499e63c883e04a88eaab735e9be8f, type: 3}
+  spacing: 3
+  sideOffset: 4.5
+  countPerSide: 16
+  jitter: 0.3
+  faceInward: 1
+  wrapThresholdZ: 8
 --- !u!1 &1697335798
 GameObject:
   m_ObjectHideFlags: 0
@@ -725,6 +785,11 @@ MonoBehaviour:
   railRightColor: {r: 0, g: 1, b: 1, a: 1}
   wallColor: {r: 1, g: 0, b: 0.67, a: 1}
   chevronColor: {r: 1, g: 0.83, b: 0, a: 1}
+  showWallSlab: 0
+  showSideRails: 0
+  showLaneStripes: 0
+  showSpurPreview: 0
+  showChevron: 1
 --- !u!4 &1697335800
 Transform:
   m_ObjectHideFlags: 0
