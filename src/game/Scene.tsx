@@ -47,10 +47,12 @@ export function Scene({ audio }: { audio: Audio }) {
       const elapsed = TURN_FLASH_DURATION - (s.turnFlashEnd - now)
       const t = Math.max(0, Math.min(1, elapsed / TURN_FLASH_DURATION))
       const turnDir = s.segments[0]?.turnDir
-      // Right turn: camera/world rotates so player perceives going right;
-      // we negate Y to match three.js right-handed convention.
+      // The next corridor is rendered perpendicular at the corner: right
+      // turn → world +X branch, left turn → world -X branch. Rotating the
+      // scene by +π/2 around Y maps world +X onto the camera's -Z (front);
+      // -π/2 maps world -X onto -Z. So right turn = +π/2, left turn = -π/2.
       const target =
-        turnDir === 'left' ? Math.PI / 2 : -Math.PI / 2
+        turnDir === 'right' ? Math.PI / 2 : -Math.PI / 2
       s.worldRotation = target * easeInOutCubic(t)
       if (worldRef.current) worldRef.current.rotation.y = s.worldRotation
       if (now >= s.turnFlashEnd) gameStore.completeTurn()
