@@ -37,6 +37,16 @@ namespace FestivalRunner
         [SerializeField] private Color wallColor = new Color(1f, 0f, 0.67f);
         [SerializeField] private Color chevronColor = new Color(1f, 0.83f, 0f);
 
+        [Header("Corner barricade (optional)")]
+        [Tooltip("Optional prefab to spawn at the corner where the player turns. Spawns one instance per corner and moves with the wall as the player approaches.")]
+        [SerializeField] private GameObject cornerBarricadePrefab;
+        [Tooltip("Local offset from corner center.")]
+        [SerializeField] private Vector3 cornerBarricadePosition = Vector3.zero;
+        [Tooltip("Local rotation (euler degrees). Use 90/-90 on Y if the model imports facing the wrong way.")]
+        [SerializeField] private Vector3 cornerBarricadeRotation = Vector3.zero;
+        [Tooltip("Uniform scale for the barricade.")]
+        [SerializeField] private float cornerBarricadeScale = 1f;
+
         [Header("Placeholder visibility")]
         [Tooltip("Show the pink wall slab + neon trim at the end of each segment. Off by default — we use the chevron + rotation as the turn cue and let festival decor fill the corner instead.")]
         [SerializeField] private bool showWallSlab = false;
@@ -110,6 +120,15 @@ namespace FestivalRunner
                 new Vector3(2.1f, 0.45f, 0.3f), matChevron, _chevronGroup,
                 Quaternion.Euler(0f, 0f, 45f));
             _chevronGroup.localPosition = new Vector3(0f, wallHeight + 1.5f, 0f);
+
+            // Optional barricade prefab at the corner.
+            if (cornerBarricadePrefab != null)
+            {
+                var b = Instantiate(cornerBarricadePrefab, _wallGroup);
+                b.transform.localPosition = cornerBarricadePosition;
+                b.transform.localRotation = Quaternion.Euler(cornerBarricadeRotation);
+                b.transform.localScale = Vector3.one * cornerBarricadeScale;
+            }
 
             // ---- Perpendicular spur preview ----
             _spurGroup = new GameObject("SpurPreview").transform;

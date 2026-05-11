@@ -249,8 +249,13 @@ namespace FestivalRunner
             slot.active = true;
             slot.scored = false;
 
-            // Position at the rear, in the chosen lane.
-            float y = isJumpable ? jumpableHeight / 2f : blockHeight / 2f;
+            // Position at the rear, in the chosen lane. Prefabs are assumed to
+            // have their pivot at the feet (typical for humanoid models like
+            // Mixamo characters), so Y=0 places them on the ground. Primitive
+            // fallback cubes pivot at the center, so we offset by half height.
+            bool usingPrefab = prefabs != null && prefabs.Length > 0;
+            float y = usingPrefab ? 0f
+                                  : (isJumpable ? jumpableHeight / 2f : blockHeight / 2f);
             slot.transform.localPosition = new Vector3(lane * -laneWidth, y, spawnZ);
         }
     }
