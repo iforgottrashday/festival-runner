@@ -58,6 +58,12 @@ namespace FestivalRunner
         [Tooltip("Add this to each item's Y rotation (degrees). Useful when a model imports facing the wrong way.")]
         [SerializeField] private float yRotationOffset = 0f;
 
+        [Tooltip("X rotation offset (degrees). Use 90 or -90 if a model imports lying on its side (e.g., porta_potty needs +90 X).")]
+        [SerializeField] private float xRotationOffset = 0f;
+
+        [Tooltip("Z rotation offset (degrees). For models that need a roll correction.")]
+        [SerializeField] private float zRotationOffset = 0f;
+
         [Header("Scale")]
         [Tooltip("Minimum scale multiplier. Set min=max=1 to disable per-item scaling.")]
         [SerializeField] private float scaleMin = 1f;
@@ -143,7 +149,7 @@ namespace FestivalRunner
                 FacingMode.Random => Random.Range(0f, 360f),
                 _ => 0f,
             };
-            return Quaternion.Euler(0f, baseY + yRotationOffset, 0f);
+            return Quaternion.Euler(xRotationOffset, baseY + yRotationOffset, zRotationOffset);
         }
 
         void Update()
