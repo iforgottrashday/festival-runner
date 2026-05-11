@@ -10,6 +10,14 @@ namespace FestivalRunner
     /// </summary>
     public class PlayerController : MonoBehaviour
     {
+        public static PlayerController Instance { get; private set; }
+
+        /// <summary>Current world X (interpolated lane position). Read by ObstacleSpawner for collision.</summary>
+        public float CurrentX => _currentX;
+
+        /// <summary>Current jump height above baseY (0 when grounded). Read by ObstacleSpawner to check jump-clearance.</summary>
+        public float CurrentJumpY { get; private set; }
+
         [Header("Lane")]
         [Tooltip("World units between adjacent lanes.")]
         [SerializeField] private float laneWidth = 2.2f;
@@ -34,7 +42,18 @@ namespace FestivalRunner
 
         void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+                return;
+            }
+            Instance = this;
             if (animator == null) animator = GetComponentInChildren<Animator>();
+        }
+
+        void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
         }
 
         void Update()
@@ -63,6 +82,7 @@ namespace FestivalRunner
                 if (t >= 1f) s.IsJumping = false;
                 else jumpY = Mathf.Sin(t * Mathf.PI) * jumpHeight;
             }
+            CurrentJumpY = jumpY;
 
             transform.localPosition = new Vector3(_currentX, baseY + jumpY, 0f);
 
