@@ -36,8 +36,11 @@ namespace FestivalRunner
                 HandleInput(s);
             }
 
-            // Smoothly interpolate to the target lane X.
-            float targetX = s.Lane * laneWidth;
+            // Smoothly interpolate to the target lane X. Negated because the
+            // camera looks in -Z (rotated 180° around Y) in Unity's left-
+            // handed coord system, which puts world +X on the camera's LEFT.
+            // The negation keeps "Lane +1 = visually right" intuitive for input.
+            float targetX = -s.Lane * laneWidth;
             _currentX = Mathf.Lerp(_currentX, targetX, Time.deltaTime * laneSwitchSpeed);
 
             // Jump arc (sine over jumpDuration).
