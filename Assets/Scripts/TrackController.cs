@@ -41,6 +41,12 @@ namespace FestivalRunner
         private Transform _wallGroup;
         private Transform _chevronGroup;
         private Transform _spurGroup;
+        // Current corridor rails / stripes — kept as refs so we can resize
+        // them each frame to end exactly at the wall.
+        private Transform[] _currentStripes = new Transform[2];
+        private Transform[] _currentRails = new Transform[2];
+        private Transform[] _spurStripes = new Transform[2];
+        private Transform[] _spurRails = new Transform[2];
         private int _lastTurnsCompletedSeen = -1;
 
         void Start()
@@ -69,7 +75,8 @@ namespace FestivalRunner
             }
 
             // Lane stripes + side rails for the current corridor.
-            SpawnStripesAndRails(transform, matStripe, matRailLeft, matRailRight);
+            SpawnStripesAndRails(transform, matStripe, matRailLeft, matRailRight,
+                                 _currentStripes, _currentRails);
 
             // ---- Wall + chevron at end of segment (moves with distAlong) ----
             _wallGroup = new GameObject("WallGroup").transform;
@@ -110,7 +117,8 @@ namespace FestivalRunner
                     _spurGroup
                 );
             }
-            SpawnStripesAndRails(_spurGroup, matStripe, matRailLeft, matRailRight);
+            SpawnStripesAndRails(_spurGroup, matStripe, matRailLeft, matRailRight,
+                                 _spurStripes, _spurRails);
         }
 
         void Update()
@@ -152,9 +160,25 @@ namespace FestivalRunner
 
             // Position wall at end of segment (cornerZ approaches 0 as player runs).
             var seg = PathManager.Instance?.Current;
+            var nextSeg = PathManager.Instance?.Next;
             if (seg != null)
             {
                 float cornerZ = -(seg.Length - s.DistAlong);
+
+                // Resize current corridor's rails/stripes so they end exactly
+                // at the wall (instead of extending past it into the spur).
+                float currentVisible = seg.Length - s.DistAlong;
+                FitToLength(_currentStripes, currentVisible);
+                FitToLength(_currentRails, currentVisible);
+
+                // Size the spur's rails/stripes to the next segment's length so
+                // they match the new corridor's geometry the instant the snap
+                // happens.
+                if (nextSeg != null)
+                {
+                    FitToLength(_spurStripes, nextSeg.Length);
+                    FitToLength(_spurRails, nextSeg.Length);
+                }
                 if (_wallGroup != null)
                 {
                     _wallGroup.localPosition = new Vector3(0f, 0f, cornerZ);
@@ -183,29 +207,53 @@ namespace FestivalRunner
         }
 
         void SpawnStripesAndRails(Transform parent, Material matStripe,
-                                  Material matRailLeft, Material matRailRight)
+                                  Material matRailLeft, Material matRailRight,
+                                  Transform[] stripesOut, Transform[] railsOut)
         {
-            // Long lane stripes covering both sides of the corridor.
+            // Lane stripes — positions/scales overwritten each frame.
+            int slot = 0;
             for (int sx = -1; sx <= 1; sx += 2)
             {
-                MakeCube(
+                var stripe = MakeCube(
                     $"Stripe_{sx}",
-                    new Vector3(sx * 1.1f, 0f, -tileCount * tileLength / 2f),
-                    new Vector3(0.08f, 0.02f, tileCount * tileLength),
+                    new Vector3(sx * 1.1f, 0f, 0f),
+                    new Vector3(0.08f, 0.02f, 1f),
                     matStripe,
                     parent
                 );
+                stripesOut[slot++] = stripe.transform;
             }
             // Side rails — pink left, cyan right.
+            slot = 0;
             for (int sx = -1; sx <= 1; sx += 2)
             {
-                MakeCube(
+                var rail = MakeCube(
                     $"Rail_{sx}",
-                    new Vector3(sx * 3.5f, 0.5f, -tileCount * tileLength / 2f),
-                    new Vector3(0.15f, 1f, tileCount * tileLength),
+                    new Vector3(sx * 3.5f, 0.5f, 0f),
+                    new Vector3(0.15f, 1f, 1f),
                     sx < 0 ? matRailLeft : matRailRight,
                     parent
                 );
+                railsOut[slot++] = rail.transform;
+            }
+        }
+
+        /// <summary>Resize/position a pair of rail or stripe transforms to span
+        /// from local z=0 (player end) to local z=-length (corner end).</summary>
+        static void FitToLength(Transform[] objects, float length)
+        {
+            if (length < 0f) length = 0f;
+            float centerZ = -length / 2f;
+            for (int i = 0; i < objects.Length; i++)
+            {
+                var t = objects[i];
+                if (t == null) continue;
+                var p = t.localPosition;
+                p.z = centerZ;
+                t.localPosition = p;
+                var s = t.localScale;
+                s.z = length;
+                t.localScale = s;
             }
         }
 
