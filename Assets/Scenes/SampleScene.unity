@@ -119,6 +119,41 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &244757733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 244757734}
+  m_Layer: 0
+  m_Name: Decor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &244757734
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 244757733}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1515110284}
+  - {fileID: 1433237578}
+  - {fileID: 1866146250}
+  - {fileID: 1163480642}
+  m_Father: {fileID: 486055416}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,6 +477,7 @@ Transform:
   m_Children:
   - {fileID: 1697335800}
   - {fileID: 1634532650}
+  - {fileID: 244757734}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
@@ -683,6 +719,186 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1163480641
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1163480642}
+  - component: {fileID: 1163480643}
+  m_Layer: 0
+  m_Name: DecorSpawner_Tents
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1163480642
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163480641}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 244757734}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1163480643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163480641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14051f08f6bce9b44be047df1bfcb1e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FestivalRunner.DecorSpawner
+  prefabs:
+  - {fileID: -6689036041284674117, guid: 35f98ef5a01dd7042bad27dfe869be15, type: 3}
+  spacing: 100
+  sideOffset: 40
+  countPerSide: 10
+  sideMode: 0
+  yOffset: 0
+  jitterX: 0.4
+  jitterZ: 1.5
+  facingMode: 0
+  yRotationOffset: 0
+  xRotationOffset: -90
+  zRotationOffset: 0
+  scaleMin: 1
+  scaleMax: 1
+  wrapThresholdZ: 8
+--- !u!1 &1433237577
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1433237578}
+  - component: {fileID: 1433237579}
+  m_Layer: 0
+  m_Name: DecorSpawner_PortaPotties
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1433237578
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433237577}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 244757734}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1433237579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433237577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14051f08f6bce9b44be047df1bfcb1e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FestivalRunner.DecorSpawner
+  prefabs:
+  - {fileID: -6689036041284674117, guid: 4fefd02a3e2a2604695c46b775c315d7, type: 3}
+  spacing: 18
+  sideOffset: 6
+  countPerSide: 8
+  sideMode: 0
+  yOffset: 0
+  jitterX: 1.5
+  jitterZ: 3
+  facingMode: 0
+  yRotationOffset: 180
+  xRotationOffset: -90
+  zRotationOffset: 0
+  scaleMin: 1
+  scaleMax: 1
+  wrapThresholdZ: 8
+--- !u!1 &1515110283
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1515110284}
+  - component: {fileID: 1515110285}
+  m_Layer: 0
+  m_Name: DecorSpawner_Tables
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1515110284
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515110283}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 244757734}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1515110285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515110283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14051f08f6bce9b44be047df1bfcb1e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FestivalRunner.DecorSpawner
+  prefabs:
+  - {fileID: -6689036041284674117, guid: 8c3be825915072b4c8cacdcc8677195e, type: 3}
+  spacing: 22
+  sideOffset: 6.5
+  countPerSide: 6
+  sideMode: 0
+  yOffset: 0
+  jitterX: 0.4
+  jitterZ: 4
+  facingMode: 3
+  yRotationOffset: 0
+  xRotationOffset: 90
+  zRotationOffset: 0
+  scaleMin: 1
+  scaleMax: 1
+  wrapThresholdZ: 8
 --- !u!1 &1634532649
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,8 +925,8 @@ Transform:
   m_GameObject: {fileID: 1634532649}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 486055416}
@@ -737,10 +953,10 @@ MonoBehaviour:
   - {fileID: 8173867755292196880, guid: 6ee89945f7bc0024f8dd7c9b4074bd68, type: 3}
   - {fileID: 5566987835239272960, guid: a19499e63c883e04a88eaab735e9be8f, type: 3}
   spacing: 3
-  sideOffset: 4.5
-  countPerSide: 16
-  jitter: 0.3
-  faceInward: 1
+  sideOffset: 6.5
+  countPerSide: 140
+  jitter: 5
+  faceInward: 0
   wrapThresholdZ: 8
 --- !u!1 &1697335798
 GameObject:
@@ -805,6 +1021,66 @@ Transform:
   m_Children: []
   m_Father: {fileID: 486055416}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1866146249
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1866146250}
+  - component: {fileID: 1866146251}
+  m_Layer: 0
+  m_Name: DecorSpawner_Semi
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1866146250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866146249}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -10, z: 0}
+  m_LocalScale: {x: 15, y: 15, z: 15}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 244757734}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1866146251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866146249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14051f08f6bce9b44be047df1bfcb1e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FestivalRunner.DecorSpawner
+  prefabs:
+  - {fileID: -6689036041284674117, guid: 757866e8801f7d24e963a4676a19f80f, type: 3}
+  spacing: 10
+  sideOffset: 18
+  countPerSide: 10
+  sideMode: 0
+  yOffset: 0
+  jitterX: 0.4
+  jitterZ: 1.5
+  facingMode: 2
+  yRotationOffset: 0
+  xRotationOffset: -90
+  zRotationOffset: 0
+  scaleMin: 1
+  scaleMax: 1
+  wrapThresholdZ: 8
 --- !u!1 &1994234884 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9830275c4ef0fd24e832d7653fa7cd1d, type: 3}
