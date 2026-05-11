@@ -5,7 +5,6 @@ import { Player } from './Player'
 import { Track } from './Track'
 import { Obstacles } from './Obstacles'
 import { gameStore } from './store'
-import { TURN_FLASH_DURATION } from './path'
 import type { Intensity } from '../audio/HouseBeat'
 
 type Audio = {
@@ -40,38 +39,38 @@ export function Scene({ audio }: { audio: Audio }) {
     // inspection can capture mid-turn snapshots.
     if (s.paused) return
 
-    // Trip-flash + world rotation during a turn. The world rotates
-    // ±90° while the flash overlay covers the snap-back at the end.
-    if (s.isTurning) {
-      const now = performance.now() / 1000
-      const elapsed = TURN_FLASH_DURATION - (s.turnFlashEnd - now)
-      const t = Math.max(0, Math.min(1, elapsed / TURN_FLASH_DURATION))
-      const turnDir = s.segments[0]?.turnDir
-      // The next corridor is rendered perpendicular at the corner: right
-      // turn → world +X branch, left turn → world -X branch. Rotating the
-      // scene by +π/2 around Y maps world +X onto the camera's -Z (front);
-      // -π/2 maps world -X onto -Z. So right turn = +π/2, left turn = -π/2.
-      const target =
-        turnDir === 'right' ? Math.PI / 2 : -Math.PI / 2
+    const seg = s.segments[0]
+
+    // Always advance distAlong — including during a turn so the player
+    // physically travels through the corner instead of teleporting.
+    if (seg) s.distAlong += s.speed * dt
+
+    if (s.isTurning && seg) {
+      // Rotation progress is the fraction of the way from turn-start to
+      // the corner. Hits 1.0 exactly when distAlong reaches seg.length.
+      const turnDist = Math.max(0.001, seg.length - s.turnStartDistAlong)
+      const traveled = s.distAlong - s.turnStartDistAlong
+      const t = Math.max(0, Math.min(1, traveled / turnDist))
+      const turnDir = seg.turnDir
+      // right turn = +π/2 (scene-local +X maps to world -Z = camera front),
+      // left turn = -π/2.
+      const target = turnDir === 'right' ? Math.PI / 2 : -Math.PI / 2
       s.worldRotation = target * easeInOutCubic(t)
       if (worldRef.current) worldRef.current.rotation.y = s.worldRotation
-      if (now >= s.turnFlashEnd) gameStore.completeTurn()
+
+      if (s.distAlong >= seg.length) gameStore.completeTurn()
       return
     }
 
     // Normal frame — make sure rotation is exactly 0
     if (worldRef.current) worldRef.current.rotation.y = 0
 
-    // Advance path progress
-    const seg = s.segments[0]
-    if (seg) {
-      s.distAlong += s.speed * dt
-      if (s.distAlong >= seg.length) {
-        audio.playGameOver()
-        audio.setIntensity(0)
-        gameStore.gameOver()
-        return
-      }
+    // Wall collision (player went past the corner without turning)
+    if (seg && s.distAlong >= seg.length) {
+      audio.playGameOver()
+      audio.setIntensity(0)
+      gameStore.gameOver()
+      return
     }
 
     // Distance score (passive)

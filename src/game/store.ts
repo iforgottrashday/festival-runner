@@ -32,6 +32,10 @@ interface GameState {
   distAlong: number
   isTurning: boolean
   turnFlashEnd: number // performance.now()/1000 timestamp
+  // distAlong value when the active turn was triggered — drives the
+  // rotation progress so the camera reaches ±π/2 exactly when the player
+  // reaches the corner.
+  turnStartDistAlong: number
   turnsCompleted: number
   // Camera/world rotation around Y axis. Animates ±π/2 during a turn,
   // snaps back to 0 when the new segment loads.
@@ -58,6 +62,7 @@ const state: GameState = {
   distAlong: 0,
   isTurning: false,
   turnFlashEnd: 0,
+  turnStartDistAlong: 0,
   turnsCompleted: 0,
   worldRotation: 0,
   paused: false,
@@ -142,9 +147,11 @@ export const gameStore = {
     const distRemaining = seg.length - state.distAlong
     if (distRemaining > TURN_WINDOW_DIST) return false
     if (seg.turnDir !== dir) return false
-    // Successful turn: begin trip-flash + rotation transition.
+    // Successful turn. Rotation is driven by distance traveled (not time)
+    // so the camera reaches 90° exactly when the player reaches the corner.
     state.isTurning = true
     state.turnFlashEnd = now + TURN_FLASH_DURATION
+    state.turnStartDistAlong = state.distAlong
     notify()
     return true
   },

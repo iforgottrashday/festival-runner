@@ -4,14 +4,13 @@
   pointer-events: none;
   z-index: 50;
   opacity: 0;
+  /* Subtle warm glow at the screen edges only — leaves the center clear so
+     the player can see the rotation happen. */
   background:
-    radial-gradient(circle at 50% 50%,
-      rgba(255, 43, 214, 0.0) 0%,
-      rgba(255, 43, 214, 0.6) 20%,
-      rgba(0, 255, 255, 0.7) 45%,
-      rgba(255, 212, 0, 0.6) 70%,
-      rgba(255, 43, 214, 0.0) 100%);
-  filter: blur(2px) hue-rotate(0deg);
+    radial-gradient(ellipse at 50% 50%,
+      rgba(255, 255, 255, 0.0) 30%,
+      rgba(255, 43, 214, 0.18) 70%,
+      rgba(0, 255, 255, 0.22) 100%);
   mix-blend-mode: screen;
   transition: opacity 0.05s ease-out;
 }
@@ -24,22 +23,11 @@
 @keyframes trip-flash-anim {
   0% {
     opacity: 0;
-    filter: blur(8px) hue-rotate(0deg);
-    transform: scale(0.9);
   }
-  20% {
+  35% {
     opacity: 1;
-    filter: blur(0px) hue-rotate(60deg);
-    transform: scale(1.05);
-  }
-  60% {
-    opacity: 1;
-    filter: blur(4px) hue-rotate(240deg);
-    transform: scale(1);
   }
   100% {
     opacity: 0;
-    filter: blur(2px) hue-rotate(360deg);
-    transform: scale(1);
   }
 }
