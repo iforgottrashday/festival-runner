@@ -48,6 +48,8 @@ namespace FestivalRunner
         [SerializeField] private float cornerBarricadeScale = 1f;
 
         [Header("Placeholder visibility")]
+        [Tooltip("Show the dark purple scrolling floor tiles. Off by default — the festival ground beneath shows through.")]
+        [SerializeField] private bool showFloorTiles = false;
         [Tooltip("Show the pink wall slab + neon trim at the end of each segment. Off by default — we use the chevron + rotation as the turn cue and let festival decor fill the corner instead.")]
         [SerializeField] private bool showWallSlab = false;
         [Tooltip("Show the pink/cyan side rails along the corridor. Off by default — crowd lines the sides instead.")]
@@ -161,6 +163,16 @@ namespace FestivalRunner
         /// </summary>
         void ApplyPlaceholderVisibility()
         {
+            // Floor tiles.
+            if (_tiles != null)
+            {
+                foreach (var t in _tiles)
+                {
+                    if (t == null) continue;
+                    var r = t.GetComponent<Renderer>();
+                    if (r != null) r.enabled = showFloorTiles;
+                }
+            }
             // Wall slab + top trim: anything inside _wallGroup that's NOT the chevron.
             if (_wallGroup != null)
             {

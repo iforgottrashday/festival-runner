@@ -478,6 +478,8 @@ Transform:
   - {fileID: 1697335800}
   - {fileID: 1634532650}
   - {fileID: 244757734}
+  - {fileID: 1370906061}
+  - {fileID: 1850171409}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
@@ -779,6 +781,11 @@ MonoBehaviour:
   scaleMin: 1
   scaleMax: 1
   wrapThresholdZ: 8
+--- !u!4 &1370906061 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+  m_PrefabInstance: {fileID: 1942393688}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1433237577
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,8 +812,8 @@ Transform:
   m_GameObject: {fileID: 1433237577}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalPosition: {x: 0, y: 1.95, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 244757734}
@@ -827,7 +834,7 @@ MonoBehaviour:
   - {fileID: -6689036041284674117, guid: 4fefd02a3e2a2604695c46b775c315d7, type: 3}
   spacing: 18
   sideOffset: 6
-  countPerSide: 8
+  countPerSide: 4
   sideMode: 0
   yOffset: 0
   jitterX: 1.5
@@ -865,8 +872,8 @@ Transform:
   m_GameObject: {fileID: 1515110283}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 244757734}
@@ -886,8 +893,8 @@ MonoBehaviour:
   prefabs:
   - {fileID: -6689036041284674117, guid: 8c3be825915072b4c8cacdcc8677195e, type: 3}
   spacing: 22
-  sideOffset: 6.5
-  countPerSide: 6
+  sideOffset: 2.5
+  countPerSide: 3
   sideMode: 0
   yOffset: 0
   jitterX: 0.4
@@ -925,7 +932,7 @@ Transform:
   m_GameObject: {fileID: 1634532649}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -952,10 +959,10 @@ MonoBehaviour:
   - {fileID: 6860439443836173746, guid: c5d3b86645a66884caefa00a7e15f7b4, type: 3}
   - {fileID: 8173867755292196880, guid: 6ee89945f7bc0024f8dd7c9b4074bd68, type: 3}
   - {fileID: 5566987835239272960, guid: a19499e63c883e04a88eaab735e9be8f, type: 3}
-  spacing: 3
+  spacing: 2
   sideOffset: 6.5
-  countPerSide: 140
-  jitter: 5
+  countPerSide: 250
+  jitter: 3
   faceInward: 0
   wrapThresholdZ: 8
 --- !u!1 &1697335798
@@ -1001,6 +1008,10 @@ MonoBehaviour:
   railRightColor: {r: 0, g: 1, b: 1, a: 1}
   wallColor: {r: 1, g: 0, b: 0.67, a: 1}
   chevronColor: {r: 1, g: 0.83, b: 0, a: 1}
+  cornerBarricadePrefab: {fileID: 0}
+  cornerBarricadePosition: {x: 0, y: 0, z: 0}
+  cornerBarricadeRotation: {x: 0, y: 0, z: 0}
+  cornerBarricadeScale: 1
   showWallSlab: 0
   showSideRails: 0
   showLaneStripes: 0
@@ -1021,6 +1032,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 486055416}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1850171408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1850171409}
+  - component: {fileID: 1850171410}
+  m_Layer: 0
+  m_Name: Obstacles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1850171409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850171408}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 486055416}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1850171410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850171408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4642dab8885ea94fbe1db87d9dfe05e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FestivalRunner.ObstacleSpawner
+  blockPrefabs: []
+  jumpablePrefabs: []
+  poolSize: 16
+  spawnZ: -50
+  killZ: 8
+  minGapZ: 14
+  turnClearance: 22
+  jumpableProbability: 0.3
+  laneWidth: 2.2
+  collisionRadiusX: 0.7
+  collisionZMin: -0.7
+  collisionZMax: 0.7
+  jumpClearanceY: 0.55
+  blockColor: {r: 1, g: 0.2, b: 0.85, a: 1}
+  jumpableColor: {r: 1, g: 0.85, b: 0.1, a: 1}
+  blockHeight: 1.6
+  jumpableHeight: 0.55
+  obstacleWidth: 1
 --- !u!1 &1866146249
 GameObject:
   m_ObjectHideFlags: 0
@@ -1081,6 +1154,75 @@ MonoBehaviour:
   scaleMin: 1
   scaleMax: 1
   wrapThresholdZ: 8
+--- !u!1001 &1942393688
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 486055416}
+    m_Modifications:
+    - target: {fileID: -6689036041284674117, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_Name
+      value: grass_asphalt_ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774220344278030320, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: -5645937942226959685, guid: e4fd3cb14cd8c08439e39b0bb61b0bdf, type: 3}
 --- !u!1 &1994234884 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9830275c4ef0fd24e832d7653fa7cd1d, type: 3}
@@ -1100,8 +1242,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FestivalRunner.PlayerController
   laneWidth: 2.2
   laneSwitchSpeed: 14
-  jumpDuration: 0.6
-  jumpHeight: 1.2
+  jumpDuration: 1.5
+  jumpHeight: 3
   baseY: 0
   animator: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
